@@ -33,7 +33,7 @@ export default function App() {
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  const teamMembers = ['홍평강', '최혜민'];
+  const teamMembers = ['홍평강', '최혜민', '김정연', '최낙준', '유민영'];
 
   const { tasks, setTasks, milestones, setMilestones, isLoading } = useTasksAndMilestones();
 
@@ -60,8 +60,8 @@ export default function App() {
     setTasks(tasks.filter(task => task.id !== id));
   };
 
-  const filteredTasks = filterCategory === 'all' 
-    ? tasks 
+  const filteredTasks = filterCategory === 'all'
+    ? tasks
     : tasks.filter(task => task.category === filterCategory);
 
   const categoryColors = {
@@ -113,112 +113,111 @@ export default function App() {
           </div>
         ) : (
           <>
-        {/* 마일스톤 카드 */}
-        <section className="mb-8">
-          <h2 className="text-gray-900 mb-4">주요 마일스톤 (📌핀으로 고정된 작업)</h2>
-          {computedMilestones.length === 0 ? (
-            <div className="bg-white rounded-lg border border-gray-200 p-6 text-center">
-              <p className="text-gray-500">핀으로 고정된 마일스톤이 없습니다. 작업 목록에서 중요한 작업을 핀으로 고정하세요.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {computedMilestones.map(milestone => (
-                <MilestoneCard key={milestone.id} milestone={milestone} />
-              ))}
-            </div>
-          )}
-        </section>
+            {/* 마일스톤 카드 */}
+            <section className="mb-8">
+              <h2 className="text-gray-900 mb-4">주요 마일스톤 (📌핀으로 고정된 작업)</h2>
+              {computedMilestones.length === 0 ? (
+                <div className="bg-white rounded-lg border border-gray-200 p-6 text-center">
+                  <p className="text-gray-500">핀으로 고정된 마일스톤이 없습니다. 작업 목록에서 중요한 작업을 핀으로 고정하세요.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {computedMilestones.map(milestone => (
+                    <MilestoneCard key={milestone.id} milestone={milestone} />
+                  ))}
+                </div>
+              )}
+            </section>
 
-        {/* 필터 및 뷰 전환 */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <Filter className="w-5 h-5 text-gray-500" />
-            <select
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700"
-            >
-              <option value="all">전체 카테고리</option>
-              <option value="development">개발</option>
-              <option value="operation">운영</option>
-              <option value="marketing">마케팅</option>
-              <option value="legal">법률/규정</option>
-            </select>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setView('timeline')}
-              className={`px-4 py-2 rounded-lg transition-colors ${
-                view === 'timeline'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-              }`}
-            >
-              타임라인
-            </button>
-            <button
-              onClick={() => setView('list')}
-              className={`px-4 py-2 rounded-lg transition-colors ${
-                view === 'list'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-              }`}
-            >
-              목록
-            </button>
-          </div>
-        </div>
-
-        {/* 메인 콘텐츠 */}
-        {view === 'timeline' ? (
-          <Timeline 
-            tasks={filteredTasks} 
-            categoryColors={categoryColors}
-            categoryLabels={categoryLabels}
-          />
-        ) : (
-          <TaskList
-            tasks={filteredTasks}
-            onUpdateTask={updateTask}
-            onDeleteTask={deleteTask}
-            categoryColors={categoryColors}
-            categoryLabels={categoryLabels}
-          />
-        )}
-
-        {/* 범례 */}
-        <div className="mt-8 bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-gray-900 mb-4">카테고리</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {Object.entries(categoryLabels).map(([key, label]) => (
-              <div key={key} className="flex items-center gap-2">
-                <div className={`w-4 h-4 rounded ${categoryColors[key as keyof typeof categoryColors]}`} />
-                <span className="text-gray-700">{label}</span>
+            {/* 필터 및 뷰 전환 */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <Filter className="w-5 h-5 text-gray-500" />
+                <select
+                  value={filterCategory}
+                  onChange={(e) => setFilterCategory(e.target.value)}
+                  className="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700"
+                >
+                  <option value="all">전체 카테고리</option>
+                  <option value="development">개발</option>
+                  <option value="operation">운영</option>
+                  <option value="marketing">마케팅</option>
+                  <option value="legal">법률/규정</option>
+                </select>
               </div>
-            ))}
-          </div>
 
-          <h3 className="text-gray-900 mt-6 mb-4">진행 상태</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-gray-300" />
-              <span className="text-gray-700">시작 전</span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setView('timeline')}
+                  className={`px-4 py-2 rounded-lg transition-colors ${view === 'timeline'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                    }`}
+                >
+                  타임라인
+                </button>
+                <button
+                  onClick={() => setView('list')}
+                  className={`px-4 py-2 rounded-lg transition-colors ${view === 'list'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                    }`}
+                >
+                  목록
+                </button>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-blue-500" />
-              <span className="text-gray-700">진행 중</span>
+
+            {/* 메인 콘텐츠 */}
+            {view === 'timeline' ? (
+              <Timeline
+                tasks={filteredTasks}
+                categoryColors={categoryColors}
+                categoryLabels={categoryLabels}
+              />
+            ) : (
+              <TaskList
+                tasks={filteredTasks}
+                onUpdateTask={updateTask}
+                onDeleteTask={deleteTask}
+                categoryColors={categoryColors}
+                categoryLabels={categoryLabels}
+                teamMembers={teamMembers}
+              />
+            )}
+
+            {/* 범례 */}
+            <div className="mt-8 bg-white rounded-lg border border-gray-200 p-6">
+              <h3 className="text-gray-900 mb-4">카테고리</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {Object.entries(categoryLabels).map(([key, label]) => (
+                  <div key={key} className="flex items-center gap-2">
+                    <div className={`w-4 h-4 rounded ${categoryColors[key as keyof typeof categoryColors]}`} />
+                    <span className="text-gray-700">{label}</span>
+                  </div>
+                ))}
+              </div>
+
+              <h3 className="text-gray-900 mt-6 mb-4">진행 상태</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded bg-gray-300" />
+                  <span className="text-gray-700">시작 전</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded bg-blue-500" />
+                  <span className="text-gray-700">진행 중</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded bg-green-500" />
+                  <span className="text-gray-700">완료</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded bg-red-500" />
+                  <span className="text-gray-700">지연</span>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-green-500" />
-              <span className="text-gray-700">완료</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-red-500" />
-              <span className="text-gray-700">지연</span>
-            </div>
-          </div>
-        </div>
           </>
         )}
       </div>

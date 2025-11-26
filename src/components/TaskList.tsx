@@ -9,9 +9,10 @@ interface TaskListProps {
   onDeleteTask: (id: string) => void;
   categoryColors: Record<string, string>;
   categoryLabels: Record<string, string>;
+  teamMembers: string[];
 }
 
-export function TaskList({ tasks, onUpdateTask, onDeleteTask, categoryColors, categoryLabels }: TaskListProps) {
+export function TaskList({ tasks, onUpdateTask, onDeleteTask, categoryColors, categoryLabels, teamMembers }: TaskListProps) {
   const statusIcons = {
     'not-started': Circle,
     'in-progress': Clock,
@@ -73,7 +74,7 @@ export function TaskList({ tasks, onUpdateTask, onDeleteTask, categoryColors, ca
             {categoryTasks.map((task) => {
               const StatusIcon = statusIcons[task.status];
               const daysRemaining = getDaysRemaining(task.endDate);
-              
+
               return (
                 <div key={task.id} className="p-4 hover:bg-gray-50 transition-colors">
                   <div className="flex items-start justify-between gap-4">
@@ -101,8 +102,8 @@ export function TaskList({ tasks, onUpdateTask, onDeleteTask, categoryColors, ca
                           <div className="flex items-center gap-1">
                             <User className="w-4 h-4" />
                             <span>
-                              {Array.isArray(task.responsible) 
-                                ? task.responsible.join(', ') 
+                              {Array.isArray(task.responsible)
+                                ? task.responsible.join(', ')
                                 : task.responsible}
                             </span>
                           </div>
@@ -112,13 +113,12 @@ export function TaskList({ tasks, onUpdateTask, onDeleteTask, categoryColors, ca
                             </span>
                           )}
                           {daysRemaining >= 0 && task.status !== 'completed' && (
-                            <span className={`px-2 py-1 rounded text-xs ${
-                              daysRemaining <= 3 
-                                ? 'bg-red-100 text-red-700' 
-                                : daysRemaining <= 7 
-                                ? 'bg-yellow-100 text-yellow-700' 
+                            <span className={`px-2 py-1 rounded text-xs ${daysRemaining <= 3
+                              ? 'bg-red-100 text-red-700'
+                              : daysRemaining <= 7
+                                ? 'bg-yellow-100 text-yellow-700'
                                 : 'bg-blue-100 text-blue-700'
-                            }`}>
+                              }`}>
                               {daysRemaining === 0 ? '오늘 마감' : `D-${daysRemaining}`}
                             </span>
                           )}
@@ -133,13 +133,12 @@ export function TaskList({ tasks, onUpdateTask, onDeleteTask, categoryColors, ca
                         <div className="flex items-center gap-3">
                           <div className="flex-1 bg-gray-200 rounded-full h-2">
                             <div
-                              className={`h-2 rounded-full transition-all ${
-                                task.status === 'completed' 
-                                  ? 'bg-green-500' 
-                                  : task.status === 'delayed'
+                              className={`h-2 rounded-full transition-all ${task.status === 'completed'
+                                ? 'bg-green-500'
+                                : task.status === 'delayed'
                                   ? 'bg-red-500'
                                   : 'bg-blue-500'
-                              }`}
+                                }`}
                               style={{ width: `${task.progress}%` }}
                             />
                           </div>
@@ -158,14 +157,14 @@ export function TaskList({ tasks, onUpdateTask, onDeleteTask, categoryColors, ca
                             onChange={(e) => {
                               const newProgress = parseInt(e.target.value);
                               let newStatus = task.status;
-                              
+
                               if (newProgress === 100) {
                                 newStatus = 'completed';
                               } else if (newProgress > 0) {
                                 newStatus = 'in-progress';
                               }
-                              
-                              onUpdateTask(task.id, { 
+
+                              onUpdateTask(task.id, {
                                 progress: newProgress,
                                 status: newStatus
                               });
@@ -204,16 +203,15 @@ export function TaskList({ tasks, onUpdateTask, onDeleteTask, categoryColors, ca
                       {/* 마일스톤 핀 토글 */}
                       <button
                         onClick={() => onUpdateTask(task.id, { isMilestone: !task.isMilestone })}
-                        className={`p-2 rounded transition-colors ${
-                          task.isMilestone
-                            ? 'text-purple-600 bg-purple-50 hover:bg-purple-100'
-                            : 'text-gray-400 hover:text-purple-600 hover:bg-purple-50'
-                        }`}
+                        className={`p-2 rounded transition-colors ${task.isMilestone
+                          ? 'text-purple-600 bg-purple-50 hover:bg-purple-100'
+                          : 'text-gray-400 hover:text-purple-600 hover:bg-purple-50'
+                          }`}
                         title={task.isMilestone ? '마일스톤 해제' : '마일스톤으로 고정'}
                       >
                         <Pin className="w-4 h-4" />
                       </button>
-                      
+
                       {/* 수정 버튼 */}
                       <button
                         onClick={() => setEditingTaskId(task.id)}
@@ -222,7 +220,7 @@ export function TaskList({ tasks, onUpdateTask, onDeleteTask, categoryColors, ca
                       >
                         <Edit className="w-4 h-4" />
                       </button>
-                      
+
                       {/* 삭제 버튼 */}
                       <button
                         onClick={() => {
@@ -255,7 +253,7 @@ export function TaskList({ tasks, onUpdateTask, onDeleteTask, categoryColors, ca
           task={tasks.find(t => t.id === editingTaskId)!}
           onClose={() => setEditingTaskId(null)}
           onUpdate={(updates) => onUpdateTask(editingTaskId, updates)}
-          teamMembers={['홍평강', '최혜민']}
+          teamMembers={teamMembers}
         />
       )}
     </div>
